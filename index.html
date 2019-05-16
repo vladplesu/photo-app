@@ -1,27 +1,49 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js"
+<html lang="en" class="no-js">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Photo Management App</title>
-    <link rel="stylesheet" href="/src/css/foundation.css">
-    <link rel="stylesheet" href="/src/css/app.css">
+    <link rel="stylesheet" href="/src/css/foundation.css" />
+    <link rel="stylesheet" href="/src/css/app.css" />
   </head>
   <body>
-    <h1>
-      Photos
-    </h1>
-    <!-- TODO: User can see a login form
-        TODO: User can see an input field for username
-        TODO: User can see an input field for password
-        TODO: User can see a sign-in button
-        TODO: User is redirected to user dashboard after sign-in
-        TODO: User can see an option to create a new user
-        TODO: User is redirected to new user if "create new user" is clicked
-        TODO: User can see an option to recover lost/forgotten password
-        TODO: User is redirected to recover password page if "lost/forgotten password" is clicked
-    -->
+    <div class="grid-container">
+      <h1>
+        Photos
+      </h1>
+      <!-- TODO: User can see a login form
+              TODO: User can see an input field for username
+              TODO: User can see an input field for password
+              TODO: User can see a sign-in button
+              TODO: User is redirected to user dashboard after sign-in
+              TODO: User can see an option to create a new user
+              TODO: User is redirected to new user if "create new user" is clicked
+              TODO: User can see an option to recover lost/forgotten password
+              TODO: User is redirected to recover password page if "lost/forgotten password" is clicked
+          -->
+      <div class="cell">
+        <form class="log-in-form">
+          <h4 class="text-center">
+            Log in with you email account
+          </h4>
+          <label
+            >Email
+            <input type="email" placeholder="somebody@example.com" />
+          </label>
+          <label
+            >Password
+            <input type="password" placeholder="Password" />
+          </label>
+          <input id="show-password" type="checkbox" /><label for="show-password"
+            >Show password</label
+          >
+          <p><input type="submit" class="button expanded" value="Log in" /></p>
+          <p class="text-center"><a href="#">Forgot your password?</a></p>
+        </form>
+      </div>
+    </div>
     <script src="src/js/vendor/jquery.js"></script>
     <script src="src/js/vendor/what-input.js"></script>
     <script src="src/js/vendor/foundation.js"></script>

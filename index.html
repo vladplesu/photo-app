@@ -4,54 +4,81 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Photo Management App</title>
+    <title>Photo App</title>
     <link rel="stylesheet" href="/src/css/foundation.css" />
     <link rel="stylesheet" href="/src/css/app.css" />
   </head>
   <body>
-    <div class="grid-container">
-      <div class="grid-x grid-padding-x align-center">
-        <h1>
-          Photo Management App
-        </h1>
-      </div>
-      <div class="grid-x grid-padding-x small-up-2 align-center">
-        <div class="cell">
-          <!-- User can see a login form -->
-          <!-- User is redirected to user dashboard after sign-in -->
-          <form action="/dashboard.html" class="log-in-form">
-            <h4 class="text-center">
-              Log in with your username
-            </h4>
-            <!-- User can see an input field for username -->
-            <label
-              >Username
-              <input type="text" placeholder="Some cool username" />
-            </label>
-            <!-- User can see an input field for password -->
-            <label
-              >Password
-              <input type="password" placeholder="Password" />
-            </label>
-            <input id="show-password" type="checkbox" />
-            <label for="show-password">Show password</label>
-            <!-- User can see a sign-in button -->
-            <p>
-              <input type="submit" class="button expanded" value="Log in" />
-            </p>
-            <!-- User can see an option to recover lost/forgotten password -->
-            <!-- User is redirected to recover password page if "lost/forgotten password" is clicked -->
-            <!-- User can see an option to create a new user -->
-            <!-- User is redirected to new user if "create new user" is clicked -->
-            <p class="text-center">
-              <a href="/recover.html">Forgot your password?</a>
-              /
-              <a href="/new-user.html">Create new user.</a>
-            </p>
-          </form>
+    <header>
+      <nav class="top-bar topbar-responsive">
+        <div class="top-bar-title">
+          <span
+            data-responsive-toggle="topbar-responsive"
+            data-hide-for="medium"
+          >
+            <button class="menu-icon" type="button" data-toggle></button>
+          </span>
+          <a class="topbar-responsive-logo" href="#"
+            ><strong>Photo App</strong></a
+          >
+        </div>
+        <div id="topbar-responsive" class="topbar-responsive-links">
+          <div class="top-bar-right">
+            <ul class="menu simple vertical medium-horizontal">
+              <li><a href="#">Home</a></li>
+              <li>
+                <button
+                  type="button"
+                  class="button hollow topbar-responsive-button"
+                >
+                  Create User
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div class="grid-container">
+        <div class="grid-x grid-padding-x medium-up-2 align-center">
+          <div class="cell">
+            <!-- User can see a login form -->
+            <!-- User is redirected to user dashboard after sign-in -->
+            <form action="/dashboard.html" class="log-in-form">
+              <h4 class="text-center">
+                Log in with your username
+              </h4>
+              <!-- User can see an input field for username -->
+              <label
+                >Username
+                <input type="text" placeholder="Some cool username" />
+              </label>
+              <!-- User can see an input field for password -->
+              <label
+                >Password
+                <input type="password" placeholder="Password" />
+              </label>
+              <input id="show-password" type="checkbox" />
+              <label for="show-password">Show password</label>
+              <!-- User can see a sign-in button -->
+              <p>
+                <input type="submit" class="button expanded" value="Log in" />
+              </p>
+              <!-- User can see an option to recover lost/forgotten password -->
+              <!-- User is redirected to recover password page if "lost/forgotten password" is clicked -->
+              <!-- User can see an option to create a new user -->
+              <!-- User is redirected to new user if "create new user" is clicked -->
+              <p class="text-center">
+                <a href="/recover.html">Forgot your password?</a>
+                /
+                <a href="/new-user.html">Create new user.</a>
+              </p>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </main>
     <script src="src/js/vendor/jquery.js"></script>
     <script src="src/js/vendor/what-input.js"></script>
     <script src="src/js/vendor/foundation.js"></script>

@@ -1,7 +1,11 @@
+const webpack = require('webpack');
+const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
+  mode: 'development',
+  entry: path.join(__dirname, '/src/app/index.js'),
   module: {
     rules: [
       {
@@ -25,7 +29,7 @@ module.exports = {
         use: ['file-loader']
       },
       {
-        test: /\.scss$/,
+        test: /\.(sa|sc|c)ss$/,
         use: ['style-loader', 'css-loader', 'sass-loader']
       }
     ]
@@ -46,6 +50,10 @@ module.exports = {
     new HtmlWebPackPlugin({
       template: './src/pages/dashboard.html',
       filename: './dashboard/index.html'
+    }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
     }),
     new MiniCssExtractPlugin({
       // Options similar to the same option in webpackOptions.output

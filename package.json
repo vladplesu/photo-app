@@ -35,6 +35,7 @@
     "webpack-dev-server": "^3.4.1"
   },
   "dependencies": {
-    "foundation-sites": "^6.5.3"
+    "foundation-sites": "^6.5.3",
+    "jquery": "^3.4.1"
   }
 }

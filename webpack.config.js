@@ -4,16 +4,43 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
+  target: 'web',
   mode: 'development',
   entry: path.join(__dirname, '/src/app/index.js'),
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js'
+  },
+  // devServer: {
+  //   port: 9000,
+  //   contentBase: path.join(__dirname, 'src/public'),
+  //   watchContentBase: true,
+  //   watchOptions: {
+  //     poll: true
+  //   }
+  // },
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader'
-        }
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env']
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader',
+          'sass-loader'
+        ]
       },
       {
         test: /\.html$/,
@@ -27,28 +54,24 @@ module.exports = {
       {
         test: /\.(png|svg|jpg|gif)$/,
         use: ['file-loader']
-      },
-      {
-        test: /\.(sa|sc|c)ss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
       }
     ]
   },
   plugins: [
     new HtmlWebPackPlugin({
-      template: './src/index.html',
+      template: './src/public/index.html',
       filename: './index.html'
     }),
     new HtmlWebPackPlugin({
-      template: './src/pages/recover.html',
+      template: './src/public/recover.html',
       filename: './recover/index.html'
     }),
     new HtmlWebPackPlugin({
-      template: './src/pages/new-user.html',
+      template: './src/public/new-user.html',
       filename: './new-user/index.html'
     }),
     new HtmlWebPackPlugin({
-      template: './src/pages/dashboard.html',
+      template: './src/public/dashboard.html',
       filename: './dashboard/index.html'
     }),
     new webpack.ProvidePlugin({

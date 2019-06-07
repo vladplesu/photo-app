@@ -7,43 +7,14 @@
     <title>Photo App</title>
   </head>
   <body>
-    <header>
-      <nav class="top-bar topbar-responsive">
-        <div class="top-bar-title">
-          <span
-            data-responsive-toggle="topbar-responsive"
-            data-hide-for="medium"
-          >
-            <button class="menu-icon" type="button" data-toggle></button>
-          </span>
-          <a class="topbar-responsive-logo" href="#"
-            ><strong>Photo App</strong></a
-          >
-        </div>
-        <div id="topbar-responsive" class="topbar-responsive-links">
-          <div class="top-bar-right">
-            <ul class="menu simple vertical medium-horizontal">
-              <li><a href="#">Home</a></li>
-              <li>
-                <button
-                  type="button"
-                  class="button hollow topbar-responsive-button"
-                >
-                  Create User
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </header>
+    <header><%= require('html-loader!./navbar.html') %></header>
     <main>
       <div class="grid-container">
         <div class="grid-x grid-padding-x medium-up-2 align-center">
           <div class="cell">
             <!-- User can see a login form -->
             <!-- User is redirected to user dashboard after sign-in -->
-            <form action="/dashboard.html" class="log-in-form">
+            <form action="/dashboard" class="log-in-form">
               <h4 class="text-center">
                 Log in with your username
               </h4>

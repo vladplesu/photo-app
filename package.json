@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "foundation-sites": "^6.5.3",
-    "jquery": "^3.4.1"
+    "jquery": "^3.4.1",
+    "what-input": "^5.2.1"
   }
 }

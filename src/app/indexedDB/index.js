@@ -63,7 +63,7 @@
    * @param {string} username
    * @param {string} password
    */
-  function addUser(username, password) {
+  const addUser = (username, password) => {
     console.log('addUser:', arguments);
     const obj = { username, password };
 
@@ -76,10 +76,59 @@
       console.error('addPublication error', this.error);
       displayActionFailure(this.error);
     };
-  }
+  };
+
+  const getUser = (userName, password) => {
+    return new Promise((resolve, reject) => {
+      const store = getObjectStore(DB_STORE_NAME[0], 'readonly');
+
+      let req = store.openCursor();
+      req.onsuccess = event => {
+        const cursor = event.target.result;
+
+        if (cursor) {
+          req = store.get(cursor.key);
+          req.onsuccess = event => {
+            const data = event.target.result;
+            if (data.userName === userName && data.password !== password) {
+              reject('Incorect username or password. Pleas try again.');
+            } else {
+              resolve('Username exists!');
+            }
+          };
+
+          cursor.continue();
+        } else {
+          reject('Username does not exist. Create a new user.');
+        }
+      };
+    });
+  };
 
   function addEventListeners() {
     console.log('addEventListeners');
+
+    $('#log-in').on('click', async event => {
+      event.preventDefault();
+      const userName = $('#username').value;
+      const password = $('input[type="password"]');
+      try {
+        const res = await getUser(userName, password);
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    $('#new-user').on('click', async event => {
+      event.preventDefault();
+      const userName = $('#username').value;
+      const password = $('#password').value;
+      const confirmation = $('#confirmation').value;
+      if (password === confirmation) {
+        const res = await getUser(userName, password);
+      }
+    });
   }
 
   openDb();

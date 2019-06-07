@@ -20,19 +20,27 @@
               <!-- User can see an input field for username -->
               <label
                 >Username
-                <input type="text" placeholder="Some cool username" />
+                <input
+                  type="text"
+                  placeholder="Some cool username"
+                  id="username"
+                />
               </label>
               <!-- User can see an input field for password -->
               <label
                 >Password
-                <input type="password" placeholder="Password" />
+                <input type="password" placeholder="Password" id="password" />
               </label>
               <input id="show-password" type="checkbox" />
               <label for="show-password">Show password</label>
               <!-- User can see an input field for password confirmation -->
               <label
                 >Confirm Password
-                <input type="password" placeholder="Retype Password" />
+                <input
+                  type="password"
+                  placeholder="Retype Password"
+                  id="confirmation"
+                />
               </label>
               <!-- User can see a create new user button -->
               <!-- TODO: User is redirected to the dashboard after submit -->
@@ -41,6 +49,7 @@
                   type="submit"
                   class="button expanded"
                   value="Create new user"
+                  id="new-user"
                 />
               </p>
             </form>

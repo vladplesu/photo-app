@@ -6,4 +6,6 @@ import 'foundation-sites';
 
 import 'what-input';
 
+import './indexedDB/index';
+
 $(document).foundation();

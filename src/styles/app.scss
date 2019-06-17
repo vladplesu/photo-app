@@ -2,6 +2,10 @@
   border: 1px solid #cacaca;
   padding: 1rem;
   border-radius: 0;
+  height: 400px;
+  overflow: hidden;
+  transition: all 1s ease;
+  opacity: 1;
 }
 
 .grid-container {
@@ -114,4 +118,11 @@ $topbar-responsive-animation-type: fade-in; // or use slide-down or none
       animation: none;
     }
   }
+}
+
+.slide-down {
+  height: 0;
+  padding: 0;
+  border: none;
+  opacity: 0;
 }

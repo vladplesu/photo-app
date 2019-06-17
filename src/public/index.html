@@ -10,30 +10,64 @@
     <header><%= require('html-loader!./navbar.html') %></header>
     <main>
       <div class="grid-container">
-        <div class="grid-x grid-padding-x medium-up-2 align-center">
+        <div class="grid-x grid-padding-x medium-up-3 align-center">
+          <div class="cell">
+            <form class="log-in-form">
+              <h4 class="text-center">
+                Recover password
+              </h4>
+              <!-- User can an input field for username -->
+              <label
+                >Your Username
+                <input type="text" placeholder="Your cool username" />
+              </label>
+              <!-- TODO: User can see the password after submit -->
+              <p class="hide">Your password is: <span id="password"></span></p>
+              <!-- User can see a recover password button  -->
+              <p>
+                <input
+                  type="submit"
+                  class="button expanded"
+                  value="Send Password"
+                />
+              </p>
+            </form>
+          </div>
           <div class="cell">
             <!-- User can see a login form -->
             <!-- User is redirected to user dashboard after sign-in -->
-            <form action="/dashboard" class="log-in-form">
+            <form class="log-in-form" data-abide novalidate>
               <h4 class="text-center">
                 Log in with your username
               </h4>
               <!-- User can see an input field for username -->
               <label
-                >Username
+                >Username required
                 <input
                   type="text"
                   placeholder="Some cool username"
-                  id="username"
+                  required
+                  aria-errormessage="usernameError"
                 />
+                <span class="form-error" id="usernameError">
+                  This field is required.
+                </span>
               </label>
               <!-- User can see an input field for password -->
               <label
                 >Password
-                <input type="password" placeholder="Password" />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  required
+                  aria-errormessage="passwordError"
+                />
+                <span class="form-error" id="passwordError"
+                  >This field is required.</span
+                >
               </label>
-              <input id="show-password" type="checkbox" />
-              <label for="show-password">Show password</label>
+              <input id="show-password1" type="checkbox" />
+              <label for="show-password1">Show password</label>
               <!-- User can see a sign-in button -->
               <p>
                 <input
@@ -48,9 +82,65 @@
               <!-- User can see an option to create a new user -->
               <!-- User is redirected to new user if "create new user" is clicked -->
               <p class="text-center">
-                <a href="/recover">Forgot your password?</a>
+                <a href="#">Forgot your password?</a>
                 /
-                <a href="/new-user">Create new user.</a>
+                <a href="#" id="new-user">Create new user.</a>
+              </p>
+            </form>
+          </div>
+          <div class="cell">
+            <form id="new-user-form" class="log-in-form" data-abide novalidate>
+              <h4 class="text-center">
+                Create new user
+              </h4>
+              <!-- User can see an input field for username -->
+              <label
+                >Username required
+                <input
+                  type="text"
+                  placeholder="Some cool username"
+                  required
+                  aria-errormessage="usernameError"
+                />
+                <span class="form-error" id="usernameError">
+                  This field is required.
+                </span>
+              </label>
+              <!-- User can see an input field for password -->
+              <label
+                >Password
+                <input
+                  type="password"
+                  placeholder="Password"
+                  required
+                  aria-errormessage="passwordErrors"
+                />
+                <span class="form-error" id="passwordError">
+                  This field is required.
+                </span>
+              </label>
+              <input id="show-password2" type="checkbox" />
+              <label for="show-password2">Show password</label>
+              <!-- User can see an input field for password confirmation -->
+              <label
+                >Confirm Password
+                <input
+                  type="password"
+                  placeholder="Retype Password"
+                  id="confirmation"
+                  required
+                  aria-errormessage="confirmationError"
+                />
+                <span class="form-error" id="confirmationError">
+                  This field is required.
+                </span>
+              </label>
+              <!-- User can see a create new user button -->
+              <!-- TODO: User is redirected to the dashboard after submit -->
+              <p>
+                <button type="submit" class="button expanded">
+                  Create new user
+                </button>
               </p>
             </form>
           </div>

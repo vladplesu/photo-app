@@ -13,23 +13,37 @@
         <div class="grid-x grid-padding-x medium-up-2 align-center">
           <div class="cell">
             <!-- User can see a create new user form -->
-            <form class="log-in-form">
+            <form class="log-in-form" data-abide novalidate>
               <h4 class="text-center">
                 Create new user
               </h4>
               <!-- User can see an input field for username -->
               <label
-                >Username
+                >Username required
                 <input
                   type="text"
                   placeholder="Some cool username"
                   id="username"
+                  required
+                  aria-errormessage="usernameError"
                 />
+                <span class="form-error" id="usernameError">
+                  This field is required.
+                </span>
               </label>
               <!-- User can see an input field for password -->
               <label
                 >Password
-                <input type="password" placeholder="Password" id="password" />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  id="password"
+                  required
+                  aria-errormessage="passwordError"
+                />
+                <span class="form-error" id="passwordError">
+                  This field is required.
+                </span>
               </label>
               <input id="show-password" type="checkbox" />
               <label for="show-password">Show password</label>
@@ -40,7 +54,12 @@
                   type="password"
                   placeholder="Retype Password"
                   id="confirmation"
+                  required
+                  aria-errormessage="confirmationError"
                 />
+                <span class="form-error" id="confirmationError">
+                  This field is required.
+                </span>
               </label>
               <!-- User can see a create new user button -->
               <!-- TODO: User is redirected to the dashboard after submit -->

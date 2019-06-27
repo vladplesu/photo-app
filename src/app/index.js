@@ -1,34 +1,44 @@
 // Main app
-import '../styles/foundation.scss';
+import 'bootstrap';
 import '../styles/main.scss';
 
-import 'foundation-sites';
+import { addUser, openDb } from './indexedDB';
 
-import 'what-input';
-
-import * from './indexedDB';
-
-$(document).foundation();
-
-$('#new-user-form').on('formvalid.zf.abide', (ev, frm) => {
-  // alert('form is valid');
-  const userName = frm.find('input[type="text"').val();
-  const password = frm.find('input[type="password"]').val();
-  const confirmation = $('#confirmation').val();
-  if (password === confirmation) {
-    try {
-      addUser(userName, password);
-    } catch (err) {
-      console.error(err);
-    }
-    // } else {
-  }
+window.addEventListener('load', () => {
+  const $forms = $('.needs-validation');
+  const validation = Array.prototype.filter.call(
+    $forms,
+    form => {
+      form.addEventListener(
+        'submit',
+        event => {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        },
+        false
+      );
+    },
+    false
+  );
 });
 
-$('#new-user-form').on('forminvalid.zf.abide', (ev, frm) => {
-  console.log('form is invalid');
-  console.log(ev);
-  console.log(frm);
+const forgotPassBtn = document.querySelector('#log-in-form form p a');
+
+forgotPassBtn.addEventListener('click', event => {
+  event.preventDefault();
+  document.querySelector('#recover-form').classList.add('show');
+  document.querySelector('#log-in-form').classList.add('hide');
 });
 
-openDb();
+const cancelBtn = document.querySelector(
+  '#recover-form button.btn-outline-secondary'
+);
+
+cancelBtn.addEventListener('click', event => {
+  event.preventDefault();
+  document.querySelector('#recover-form').classList.remove('show');
+  document.querySelector('#log-in-form').classList.remove('hide');
+});

@@ -7,76 +7,95 @@
     <title>Photo App</title>
   </head>
   <body>
-    <header><%= require('html-loader!./navbar.html') %></header>
     <main>
-      <div class="grid-container">
-        <div class="grid-x grid-padding-x medium-up-3 align-center">
-          <div class="cell">
-            <form class="log-in-form">
-              <h4 class="text-center">
-                Recover password
-              </h4>
-              <!-- User can an input field for username -->
-              <label
-                >Your Username
-                <input type="text" placeholder="Your cool username" />
-              </label>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-sm position-absolute" id="recover-form">
+            <form class="needs-validation" novalidate>
+              <div class="form-group">
+                <h4>
+                  Recover password
+                </h4>
+                <!-- User can an input field for username -->
+                <label>Username</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text bg-info text-white">@</span>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Your cool username"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Please enter your username
+                  </div>
+                </div>
+              </div>
               <!-- TODO: User can see the password after submit -->
-              <p class="hide">Your password is: <span id="password"></span></p>
-              <!-- User can see a recover password button  -->
-              <p>
-                <input
-                  type="submit"
-                  class="button expanded"
-                  value="Send Password"
-                />
+              <p class="d-none">
+                Your password is: <span id="password"></span>
               </p>
+              <!-- User can see a recover password button  -->
+              <div class="form-group">
+                <button class="btn btn-primary" type="submit">
+                  Send Password
+                </button>
+                <button class="btn btn-outline-secondary">Cancel</button>
+              </div>
             </form>
           </div>
-          <div class="cell">
+          <div class="col-sm" id="log-in-form">
             <!-- User can see a login form -->
             <!-- User is redirected to user dashboard after sign-in -->
-            <form class="log-in-form" data-abide novalidate>
-              <h4 class="text-center">
+            <form class="needs-validation" novalidate>
+              <h4>
                 Log in with your username
               </h4>
               <!-- User can see an input field for username -->
-              <label
-                >Username required
+              <label>Username required</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text bg-info text-white">@</span>
+                </div>
                 <input
+                  class="form-control"
                   type="text"
-                  placeholder="Some cool username"
+                  placeholder="Awesome username"
                   required
-                  aria-errormessage="usernameError"
                 />
-                <span class="form-error" id="usernameError">
-                  This field is required.
+                <span class="invalid-feedback">
+                  Please enter a super unique awesome (like you) username.
                 </span>
-              </label>
+              </div>
               <!-- User can see an input field for password -->
-              <label
-                >Password
+              <div class="form-group">
+                <label>Password</label>
                 <input
                   type="password"
                   placeholder="Password"
                   required
-                  aria-errormessage="passwordError"
+                  class="form-control"
                 />
-                <span class="form-error" id="passwordError"
-                  >This field is required.</span
+                <span class="invalid-feedback" id="passwordError"
+                  >Please enter a password</span
                 >
-              </label>
-              <input id="show-password1" type="checkbox" />
-              <label for="show-password1">Show password</label>
-              <!-- User can see a sign-in button -->
-              <p>
+              </div>
+              <div class="form-group form-check">
                 <input
-                  type="submit"
-                  class="button expanded"
-                  value="Log in"
-                  id="log-in"
+                  class="form-check-input"
+                  id="show-password1"
+                  type="checkbox"
                 />
-              </p>
+                <label class="form-check-label" for="show-password1"
+                  >Show password</label
+                >
+              </div>
+              <!-- User can see a sign-in button -->
+              <button type="submit" class="btn btn-primary" id="log-in">
+                Log In
+              </button>
               <!-- User can see an option to recover lost/forgotten password -->
               <!-- User is redirected to recover password page if "lost/forgotten password" is clicked -->
               <!-- User can see an option to create a new user -->
@@ -84,64 +103,72 @@
               <p class="text-center">
                 <a href="#">Forgot your password?</a>
                 /
-                <a href="#" id="new-user">Create new user.</a>
+                <a href="#" id="new-user">Create new user</a>
               </p>
             </form>
           </div>
-          <div class="cell">
-            <form id="new-user-form" class="log-in-form" data-abide novalidate>
-              <h4 class="text-center">
+          <div class="col-sm position-absolute d-none">
+            <form id="new-user-form" class="needs-validation" novalidate>
+              <h4>
                 Create new user
               </h4>
               <!-- User can see an input field for username -->
-              <label
-                >Username required
+              <label>Username required</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text bg-info text-white">@</span>
+                </div>
                 <input
+                  class="form-control"
                   type="text"
-                  placeholder="Some cool username"
+                  placeholder="Awesome username"
                   required
-                  aria-errormessage="usernameError"
                 />
-                <span class="form-error" id="usernameError">
-                  This field is required.
+                <span class="invalid-feedback">
+                  Please enter a super unique awesome (like you) username.
                 </span>
-              </label>
+              </div>
               <!-- User can see an input field for password -->
-              <label
-                >Password
+              <div class="form-group">
+                <label>Password</label>
                 <input
                   type="password"
                   placeholder="Password"
                   required
-                  aria-errormessage="passwordErrors"
+                  class="form-control"
                 />
-                <span class="form-error" id="passwordError">
-                  This field is required.
-                </span>
-              </label>
-              <input id="show-password2" type="checkbox" />
-              <label for="show-password2">Show password</label>
+                <span class="invalid-feedback" id="passwordError"
+                  >Please enter a password</span
+                >
+              </div>
+              <div class="form-group form-check">
+                <input
+                  class="form-check-input"
+                  id="show-password1"
+                  type="checkbox"
+                />
+                <label class="form-check-label" for="show-password1"
+                  >Show password</label
+                >
+              </div>
               <!-- User can see an input field for password confirmation -->
-              <label
-                >Confirm Password
+              <div class="form-group">
+                <label>Password confirmation</label>
                 <input
                   type="password"
-                  placeholder="Retype Password"
-                  id="confirmation"
+                  placeholder="Password"
                   required
-                  aria-errormessage="confirmationError"
+                  class="form-control"
                 />
-                <span class="form-error" id="confirmationError">
-                  This field is required.
-                </span>
-              </label>
+                <span class="invalid-feedback" id="passwordError"
+                  >Please enter a password</span
+                >
+              </div>
               <!-- User can see a create new user button -->
               <!-- TODO: User is redirected to the dashboard after submit -->
-              <p>
-                <button type="submit" class="button expanded">
-                  Create new user
-                </button>
-              </p>
+              <button type="submit" class="btn btn-primary">
+                Create new user
+              </button>
             </form>
           </div>
         </div>

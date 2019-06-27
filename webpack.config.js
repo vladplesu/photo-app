@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   target: 'web',
@@ -11,14 +10,6 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js'
   },
-  // devServer: {
-  //   port: 9000,
-  //   contentBase: path.join(__dirname, 'src/public'),
-  //   watchContentBase: true,
-  //   watchOptions: {
-  //     poll: true
-  //   }
-  // },
   module: {
     rules: [
       {
@@ -31,17 +22,39 @@ module.exports = {
         ]
       },
       {
-        test: /\.(sa|sc|c)ss$/,
+        test: /\.(scss)$/,
         use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader',
-          'sass-loader'
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader'
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: function() {
+                return [require('precss'), require('autoprefixer')];
+              }
+            }
+          },
+          {
+            loader: 'sass-loader'
+          }
         ]
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
         use: ['file-loader']
+      },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: 'html-loader',
+            options: { minimize: true }
+          }
+        ]
       }
     ]
   },
@@ -65,12 +78,6 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery'
-    }),
-    new MiniCssExtractPlugin({
-      // Options similar to the same option in webpackOptions.output
-      // both options are optional
-      filename: '[name].css',
-      chunkFilename: '[id].css'
     })
   ]
 };

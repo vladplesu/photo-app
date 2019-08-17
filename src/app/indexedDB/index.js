@@ -1,3 +1,5 @@
+import uniqid from 'uniqid';
+
 const DB_NAME = 'photo-app-demo';
 const DB_VERSION = 1; // Use a long long for this value (don't use a float)
 const DB_STORE_NAME = ['users', 'collections', 'photos'];
@@ -20,12 +22,16 @@ function openDb() {
     const userStore = event.currentTarget.result.createObjectStore(
       DB_STORE_NAME[0],
       {
-        keyPath: 'id',
-        autoIncrement: true
+        keyPath: 'id'
       }
     );
 
     userStore.createIndex('username', 'username', { unique: true });
+    userStore.createIndex('password', 'password', { unique: false });
+    userStore.createIndex('token', 'token', { unique: false });
+    userStore.createIndex('ids_collections', 'ids_collections', {
+      unique: false
+    });
 
     const collectionStore = event.currentTarget.result.createObjectStore(
       DB_STORE_NAME[1],
@@ -63,17 +69,25 @@ function getObjectStore(store_name, mode) {
  * @param {string} password
  */
 const addUser = (username, password) => {
-  console.log('addUser:', arguments);
-  const obj = { username, password };
+  return new Promise((resolve, reject) => {
+    console.log('addUser:', arguments);
+    const obj = {
+      id: uniqid('userID-'),
+      username,
+      password,
+      token: '',
+      ids_collections: []
+    };
 
-  const store = getObjectStore(DB_STORE_NAME[0], 'readwrite');
-  const req = store.add(obj);
-  req.onsuccess = function(evt) {
-    console.log('Insertion in DB successful');
-  };
-  req.onerror = function() {
-    console.error('addUser error', this.error);
-  };
+    const store = getObjectStore(DB_STORE_NAME[0], 'readwrite');
+    const req = store.add(obj);
+    req.onsuccess = function(evt) {
+      resolve('Insertion in DB successful');
+    };
+    req.onerror = function() {
+      reject(`addUser error: ${this.error.message}`);
+    };
+  });
 };
 
 const getUser = (userName, password) => {

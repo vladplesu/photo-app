@@ -1,13 +1,24 @@
-#recover-form {
+#recover-form,
+#new-user-form {
   opacity: 0;
-  right: 150px;
+  z-index: -1;
   transition: all 0.3s ease;
 }
 
-#recover-form.show {
+#recover-form {
+  right: 150px;
+}
+
+#new-user-form {
+  left: 150px;
+}
+
+#recover-form.show,
+#new-user-form.show {
   opacity: 1;
   z-index: 3;
   right: 0;
+  left: 0;
   transition: all 0.3s ease;
 }
 
@@ -16,8 +27,17 @@
   overflow: hidden;
 }
 
-#log-in-form.hide {
-  opacity: 0;
-  margin-left: 150px;
-  transition: all 0.3s ease;
+#log-in-form {
+  &.hide {
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+  &.left {
+    margin-left: 150px;
+  }
+
+  &.right {
+    margin-right: 150px;
+  }
 }

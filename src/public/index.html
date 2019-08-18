@@ -107,8 +107,8 @@
               </p>
             </form>
           </div>
-          <div class="col-sm position-absolute d-none">
-            <form id="new-user-form" class="needs-validation" novalidate>
+          <div class="col-sm position-absolute" id="new-user-form">
+            <form class="needs-validation" novalidate>
               <h4>
                 Create new user
               </h4>
@@ -123,6 +123,7 @@
                   type="text"
                   placeholder="Awesome username"
                   required
+                  id="new-user-input"
                 />
                 <span class="invalid-feedback">
                   Please enter a super unique awesome (like you) username.
@@ -136,6 +137,7 @@
                   placeholder="Password"
                   required
                   class="form-control"
+                  id="new-password-input"
                 />
                 <span class="invalid-feedback" id="passwordError"
                   >Please enter a password</span
@@ -144,10 +146,10 @@
               <div class="form-group form-check">
                 <input
                   class="form-check-input"
-                  id="show-password1"
+                  id="show-password2"
                   type="checkbox"
                 />
-                <label class="form-check-label" for="show-password1"
+                <label class="form-check-label" for="show-password2"
                   >Show password</label
                 >
               </div>
@@ -159,9 +161,10 @@
                   placeholder="Password"
                   required
                   class="form-control"
+                  id="new-checkpass-input"
                 />
-                <span class="invalid-feedback" id="passwordError"
-                  >Please enter a password</span
+                <span class="invalid-feedback"
+                  >Please enter the same password for confirmation</span
                 >
               </div>
               <!-- User can see a create new user button -->
@@ -169,6 +172,7 @@
               <button type="submit" class="btn btn-primary">
                 Create new user
               </button>
+              <button class="btn btn-outline-secondary">Cancel</button>
             </form>
           </div>
         </div>

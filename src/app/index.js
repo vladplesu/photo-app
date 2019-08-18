@@ -15,6 +15,7 @@ window.addEventListener('load', () => {
           if (form.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
+            console.log('invalid form');
           }
           form.classList.add('was-validated');
         },
@@ -25,20 +26,61 @@ window.addEventListener('load', () => {
   );
 });
 
-const forgotPassBtn = document.querySelector('#log-in-form form p a');
+const recoverForm = document.querySelector('#recover-form');
+const newUserForm = document.querySelector('#new-user-form');
+const loginForm = document.querySelector('#log-in-form');
+
+const forgotPassBtn = loginForm.querySelector('p a');
 
 forgotPassBtn.addEventListener('click', event => {
   event.preventDefault();
-  document.querySelector('#recover-form').classList.add('show');
-  document.querySelector('#log-in-form').classList.add('hide');
+  recoverForm.classList.add('show');
+  loginForm.classList.add('hide', 'left');
 });
 
-const cancelBtn = document.querySelector(
-  '#recover-form button.btn-outline-secondary'
-);
+const createUserBtn = loginForm.querySelector('p a:last-child');
 
-cancelBtn.addEventListener('click', event => {
+createUserBtn.addEventListener('click', event => {
   event.preventDefault();
-  document.querySelector('#recover-form').classList.remove('show');
-  document.querySelector('#log-in-form').classList.remove('hide');
+  newUserForm.classList.add('show');
+  loginForm.classList.add('hide', 'right');
 });
+
+const cancelBtns = document.querySelectorAll('button.btn-outline-secondary');
+
+cancelBtns.forEach(btn => {
+  btn.addEventListener('click', event => {
+    event.preventDefault();
+    recoverForm.classList.remove('show');
+    newUserForm.classList.remove('show');
+    loginForm.classList.remove('hide', 'left', 'right');
+  });
+});
+
+const newUserBtn = newUserForm.querySelector('button[type="submit"]');
+newUserBtn.addEventListener('click', event => {
+  const form = newUserForm.querySelector('form');
+  if (form.checkValidity()) {
+    event.preventDefault();
+    event.stopPropagation();
+    form.classList.add('was-validated');
+    const $username = $('#new-user-input');
+    const $password = $('#new-password-input');
+    const res = addUser($username[0].value, $password[0].value);
+    res.then(res => console.log(res)).catch(err => console.log(err));
+  }
+});
+
+const checkpass = document.querySelector('#new-checkpass-input');
+const password = document.querySelector('#new-password-input');
+const checkPassword = event => {
+  if (event.target.value !== password.value) {
+    checkpass.setCustomValidity('Passwords do not match.');
+  } else {
+    checkpass.setCustomValidity('');
+  }
+};
+checkpass.addEventListener('keyup', checkPassword);
+checkpass.addEventListener('change', checkPassword);
+
+openDb();

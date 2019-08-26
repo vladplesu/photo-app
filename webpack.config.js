@@ -5,10 +5,16 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 module.exports = {
   target: 'web',
   mode: 'development',
-  entry: ['@babel/polyfill', path.join(__dirname, '/src/app/index.js')],
+  entry: {
+    app: ['@babel/polyfill', path.join(__dirname, '/src/app/index.js')],
+    dashboard: [
+      '@babel/polyfill',
+      path.join(__dirname, '/src/app/dashboard/index.js')
+    ]
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js'
+    filename: '[name].bundle.js'
   },
   module: {
     rules: [
@@ -61,6 +67,7 @@ module.exports = {
   plugins: [
     new HtmlWebPackPlugin({
       template: './src/public/index.html',
+      chunks: ['app'],
       filename: './index.html'
     }),
     new HtmlWebPackPlugin({
@@ -73,6 +80,7 @@ module.exports = {
     }),
     new HtmlWebPackPlugin({
       template: './src/public/dashboard.html',
+      chunks: ['dashboard'],
       filename: './dashboard/index.html'
     }),
     new webpack.ProvidePlugin({

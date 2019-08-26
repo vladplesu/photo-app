@@ -90,9 +90,9 @@ const addUser = (username, password) => {
   });
 };
 
-const getUser = (userName, password) => {
+const getUser = (username, password) => {
   return new Promise((resolve, reject) => {
-    const store = getObjectStore(DB_STORE_NAME[0], 'readonly');
+    const store = getObjectStore(DB_STORE_NAME[0], 'readwrite');
 
     let req = store.openCursor();
     req.onsuccess = event => {
@@ -102,10 +102,13 @@ const getUser = (userName, password) => {
         req = store.get(cursor.key);
         req.onsuccess = event => {
           const data = event.target.result;
-          if (data.userName === userName && data.password !== password) {
-            reject('Incorect username or password. Pleas try again.');
+          if (data.username === username && data.password === password) {
+            localStorage.setItem('token', uniqid('token-'));
+            data.token = localStorage.token;
+            store.put(data);
+            resolve({ msg: 'Username exists!', token: data.token });
           } else {
-            resolve('Username exists!');
+            reject('Incorect username or password. Pleas try again.');
           }
         };
 
@@ -133,4 +136,4 @@ function addEventListeners() {
   });
 }
 
-export { openDb, addUser };
+export { openDb, addUser, getUser };

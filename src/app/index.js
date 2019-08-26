@@ -2,7 +2,9 @@
 import 'bootstrap';
 import '../styles/main.scss';
 
-import { addUser, openDb } from './indexedDB';
+import { openDb } from './indexedDB';
+import addNewUser from './new-user';
+import loginUser from './login';
 
 window.addEventListener('load', () => {
   const $forms = $('.needs-validation');
@@ -51,36 +53,22 @@ const cancelBtns = document.querySelectorAll('button.btn-outline-secondary');
 cancelBtns.forEach(btn => {
   btn.addEventListener('click', event => {
     event.preventDefault();
+    console.log(event);
     recoverForm.classList.remove('show');
     newUserForm.classList.remove('show');
     loginForm.classList.remove('hide', 'left', 'right');
+    newUserForm.firstElementChild.classList.remove('was-validated');
+    newUserForm.firstElementChild.reset();
   });
 });
 
-const newUserBtn = newUserForm.querySelector('button[type="submit"]');
-newUserBtn.addEventListener('click', event => {
-  const form = newUserForm.querySelector('form');
-  if (form.checkValidity()) {
-    event.preventDefault();
-    event.stopPropagation();
-    form.classList.add('was-validated');
-    const $username = $('#new-user-input');
-    const $password = $('#new-password-input');
-    const res = addUser($username[0].value, $password[0].value);
-    res.then(res => console.log(res)).catch(err => console.log(err));
-  }
-});
-
-const checkpass = document.querySelector('#new-checkpass-input');
-const password = document.querySelector('#new-password-input');
-const checkPassword = event => {
-  if (event.target.value !== password.value) {
-    checkpass.setCustomValidity('Passwords do not match.');
-  } else {
-    checkpass.setCustomValidity('');
-  }
-};
-checkpass.addEventListener('keyup', checkPassword);
-checkpass.addEventListener('change', checkPassword);
-
 openDb();
+
+addNewUser(newUserForm);
+loginUser(loginForm);
+
+// loginForm.querySelector('form').addEventListener('submit', event => {
+//   event.preventDefault();
+//   event.stopPropagation();
+//   console.log(event);
+// });

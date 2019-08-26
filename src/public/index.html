@@ -49,7 +49,7 @@
           <div class="col-sm" id="log-in-form">
             <!-- User can see a login form -->
             <!-- User is redirected to user dashboard after sign-in -->
-            <form class="needs-validation" novalidate>
+            <form class="needs-validation" novalidate action="/dashboard">
               <h4>
                 Log in with your username
               </h4>
@@ -60,10 +60,12 @@
                   <span class="input-group-text bg-info text-white">@</span>
                 </div>
                 <input
+                  id="login-user-input"
                   class="form-control"
                   type="text"
                   placeholder="Awesome username"
                   required
+                  name="username"
                 />
                 <span class="invalid-feedback">
                   Please enter a super unique awesome (like you) username.
@@ -73,6 +75,7 @@
               <div class="form-group">
                 <label>Password</label>
                 <input
+                  id="login-pass-input"
                   type="password"
                   placeholder="Password"
                   required

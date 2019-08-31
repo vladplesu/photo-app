@@ -2,7 +2,7 @@
 import 'bootstrap';
 import '../styles/main.scss';
 
-import { openDb } from './indexedDB';
+import { openDb, getUserByToken } from './indexedDB';
 import addNewUser from './new-user';
 import loginUser from './login';
 
@@ -26,6 +26,18 @@ window.addEventListener('load', () => {
     },
     false
   );
+
+  if (localStorage.token) {
+    const res = getUserByToken(localStorage.token);
+    res
+      .then(res => {
+        window.location.href = '/dashboard';
+      })
+      .catch(err => {
+        console.log(err);
+        localStorage.removeItem('token');
+      });
+  }
 });
 
 const recoverForm = document.querySelector('#recover-form');
@@ -38,6 +50,8 @@ forgotPassBtn.addEventListener('click', event => {
   event.preventDefault();
   recoverForm.classList.add('show');
   loginForm.classList.add('hide', 'left');
+  loginForm.firstElementChild.classList.remove('was-validated');
+  loginForm.firstElementChild.reset();
 });
 
 const createUserBtn = loginForm.querySelector('p a:last-child');
@@ -46,6 +60,8 @@ createUserBtn.addEventListener('click', event => {
   event.preventDefault();
   newUserForm.classList.add('show');
   loginForm.classList.add('hide', 'right');
+  loginForm.firstElementChild.classList.remove('was-validated');
+  loginForm.firstElementChild.reset();
 });
 
 const cancelBtns = document.querySelectorAll('button.btn-outline-secondary');
@@ -66,9 +82,3 @@ openDb();
 
 addNewUser(newUserForm);
 loginUser(loginForm);
-
-// loginForm.querySelector('form').addEventListener('submit', event => {
-//   event.preventDefault();
-//   event.stopPropagation();
-//   console.log(event);
-// });

@@ -18,7 +18,28 @@ const loginUser = formContainer => {
           console.log(form);
           form.submit();
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          console.log(err);
+          username.setCustomValidity(err);
+          password.setCustomValidity(err);
+        });
+    }
+  });
+
+  const username = formContainer.querySelector('#login-user-input');
+  const password = formContainer.querySelector('#login-pass-input');
+  const check = event => {
+    if (!event.target.checkValidity()) event.target.setCustomValidity('');
+  };
+  username.addEventListener('keyup', check);
+  password.addEventListener('keyup', check);
+
+  const showPass = formContainer.querySelector('#show-password1');
+  showPass.addEventListener('click', () => {
+    if (password.type === 'password') {
+      password.type = 'text';
+    } else {
+      password.type = 'password';
     }
   });
 };

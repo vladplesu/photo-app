@@ -120,6 +120,55 @@ const getUser = (username, password) => {
   });
 };
 
+const getUserByToken = token => {
+  return new Promise((resolve, reject) => {
+    const store = getObjectStore(DB_STORE_NAME[0], 'readonly');
+
+    let req = store.openCursor();
+    req.onsuccess = event => {
+      const cursor = event.target.result;
+
+      if (cursor) {
+        req = store.get(cursor.key);
+        req.onsuccess = event => {
+          const data = event.target.result;
+          if (data.token === token) {
+            resolve('User is still logedin');
+          }
+          cursor.continue();
+        };
+      } else {
+        reject('Token not found');
+      }
+    };
+  });
+};
+
+const logoutUser = token => {
+  return new Promise((resolve, reject) => {
+    const store = getObjectStore(DB_STORE_NAME[0], 'readwrite');
+
+    let req = store.openCursor();
+    req.onsuccess = event => {
+      const cursor = event.target.result;
+
+      if (cursor) {
+        req = store.get(cursor.key);
+        req.onsuccess = event => {
+          const data = event.target.result;
+          if (data.token === token) {
+            data.token = '';
+            store.put(data);
+            resolve('User logged out successfuly');
+          }
+        };
+      } else {
+        reject('Token not found');
+      }
+    };
+  });
+};
+
 function addEventListeners() {
   console.log('addEventListeners');
 
@@ -136,4 +185,4 @@ function addEventListeners() {
   });
 }
 
-export { openDb, addUser, getUser };
+export { openDb, addUser, getUser, getUserByToken, logoutUser };

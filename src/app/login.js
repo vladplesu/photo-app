@@ -11,7 +11,6 @@ const loginUser = formContainer => {
       form.classList.add('was-validated');
       const username = form.querySelector('#login-user-input');
       const password = form.querySelector('#login-pass-input');
-      console.log(password.value);
       const res = getUser(username.value, password.value);
       res
         .then(res => {

@@ -2,7 +2,12 @@
 import 'bootstrap';
 import '../../styles/main.scss';
 
-import { logoutUser, openDb } from '../indexedDB/index';
+import {
+  logoutUser,
+  openDb,
+  getUserByToken,
+  addCollection
+} from '../indexedDB/index';
 
 window.addEventListener('load', () => {
   if (localStorage.token) {
@@ -21,7 +26,7 @@ window.addEventListener('load', () => {
   }
 });
 
-const logoutBtn = document.querySelector('button');
+const logoutBtn = document.querySelector('button.btn-outline-secondary');
 logoutBtn.addEventListener('click', event => {
   if (localStorage.token) {
     const res = logoutUser(localStorage.token);
@@ -33,6 +38,18 @@ logoutBtn.addEventListener('click', event => {
       .catch(err => {
         console.log(err);
       });
+  }
+});
+
+const newCollectionBtn = document.querySelector('button.btn-outline-primary');
+newCollectionBtn.addEventListener('click', event => {
+  if (localStorage.token) {
+    const obj = {};
+    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m, key, value) => {
+      obj[key] = value;
+    });
+
+    addCollection(obj.username, 'My First Album');
   }
 });
 

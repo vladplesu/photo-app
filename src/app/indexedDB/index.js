@@ -35,7 +35,7 @@ function openDb() {
 
     const collectionStore = event.currentTarget.result.createObjectStore(
       DB_STORE_NAME[1],
-      { keyPath: 'id', autoIncrement: true }
+      { keyPath: 'id' }
     );
 
     collectionStore.createIndex('userId', 'userId', { unique: false });
@@ -90,32 +90,82 @@ const addUser = (username, password) => {
   });
 };
 
+const addCollection = (username, title) => {
+  return new Promise((resolve, reject) => {
+    console.log('addCollection: ', arguments);
+
+    const userStore = getObjectStore(DB_STORE_NAME[0], 'readwrite');
+    const index = userStore.index('username');
+    const req = index.get(username);
+    req.onsuccess = event => {
+      const data = event.target.result;
+      if (typeof data === 'undefined') return reject('No user logedin');
+
+      if (data.token === localStorage.token) {
+        const obj = {
+          id: uniqid('col-'),
+          userId: data.id,
+          ids_photos: [],
+          title: title,
+          dateCreated: new Date(),
+          count: 0
+        };
+
+        data.ids_collections.push(obj.id);
+        userStore.put(data);
+        const store = getObjectStore(DB_STORE_NAME[1], 'readwrite');
+        const req = store.add(obj);
+        req.onsuccess = () => {
+          resolve('Insertion in DB successful');
+        };
+        req.onerror = event => {
+          reject(`addCollection: ${event.error.message}`);
+        };
+      }
+    };
+  });
+};
+
+const getCollections = username => {
+  return new Promise((resolve, reject) => {
+    const userStore = getObjectStore(DB_STORE_NAME[0], 'readwrite');
+    const index = userStore.index('username');
+    const req = index.get(username);
+    req.onsuccess = event => {
+      data = event.target.result;
+      if (typeof data === 'undefined') return reject('No user logedin');
+
+      collectionIDs = data.ids_collections;
+      for (id in collectionIDs) {
+        const store = getObjectStore(DB_STORE_NAME[1], 'readwrite');
+        const req = store.get(id);
+        req.onsuccess = event => {
+          data = event.target.result;
+        };
+      }
+    };
+  });
+};
+
 const getUser = (username, password) => {
   return new Promise((resolve, reject) => {
     const store = getObjectStore(DB_STORE_NAME[0], 'readwrite');
+    const index = store.index('username');
 
-    let req = store.openCursor();
+    let req = index.get(username);
     req.onsuccess = event => {
-      const cursor = event.target.result;
-
-      if (cursor) {
-        req = store.get(cursor.key);
-        req.onsuccess = event => {
-          const data = event.target.result;
-          if (data.username === username && data.password === password) {
-            localStorage.setItem('token', uniqid('token-'));
-            data.token = localStorage.token;
-            store.put(data);
-            resolve({ msg: 'Username exists!', token: data.token });
-          } else {
-            reject('Incorect username or password. Pleas try again.');
-          }
-        };
-
-        cursor.continue();
-      } else {
-        reject('Username does not exist. Create a new user.');
+      const data = event.target.result;
+      if (typeof data === 'undefined')
+        return reject('Username does not exist. Create a new user.');
+      if (data.username === username && data.password === password) {
+        localStorage.setItem('token', uniqid('token-'));
+        data.token = localStorage.token;
+        store.put(data);
+        resolve({ msg: 'Username exists!', token: data.token });
       }
+    };
+    req.onerror = event => {
+      reject('User not found: ' + event.target.errorCode);
     };
   });
 };
@@ -123,23 +173,17 @@ const getUser = (username, password) => {
 const getUserByToken = token => {
   return new Promise((resolve, reject) => {
     const store = getObjectStore(DB_STORE_NAME[0], 'readonly');
+    const index = store.index('token');
 
-    let req = store.openCursor();
+    let req = index.get(token);
     req.onsuccess = event => {
-      const cursor = event.target.result;
+      const data = event.target.result;
+      if (typeof data === 'undefined') return reject('Token not found');
 
-      if (cursor) {
-        req = store.get(cursor.key);
-        req.onsuccess = event => {
-          const data = event.target.result;
-          if (data.token === token) {
-            resolve('User is still logedin');
-          }
-          cursor.continue();
-        };
-      } else {
-        reject('Token not found');
-      }
+      resolve('User is still logedin');
+    };
+    req.onerror = event => {
+      reject('Token not found: ' + event.target.errorCode);
     };
   });
 };
@@ -185,4 +229,4 @@ function addEventListeners() {
   });
 }
 
-export { openDb, addUser, getUser, getUserByToken, logoutUser };
+export { openDb, addUser, getUser, getUserByToken, logoutUser, addCollection };

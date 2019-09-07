@@ -2,34 +2,14 @@
 import 'bootstrap';
 import '../../styles/main.scss';
 
-import {
-  logoutUser,
-  openDb,
-  getUserByToken,
-  addCollection
-} from '../indexedDB/index';
+import idb from '../indexedDB/index';
 
-window.addEventListener('load', () => {
-  if (localStorage.token) {
-    const res = getUserByToken(localStorage.token);
-    res
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
-        localStorage.removeItem('token');
-        window.location.href = '/';
-      });
-  } else {
-    window.location.href = '/';
-  }
-});
+import { getParam } from '../helpers';
 
-const logoutBtn = document.querySelector('button.btn-outline-secondary');
+const logoutBtn = document.getElementById('logout');
 logoutBtn.addEventListener('click', event => {
   if (localStorage.token) {
-    const res = logoutUser(localStorage.token);
+    const res = idb.logoutUser(localStorage.token);
     res
       .then(res => {
         localStorage.removeItem('token');
@@ -41,16 +21,100 @@ logoutBtn.addEventListener('click', event => {
   }
 });
 
-const newCollectionBtn = document.querySelector('button.btn-outline-primary');
-newCollectionBtn.addEventListener('click', event => {
-  if (localStorage.token) {
-    const obj = {};
-    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m, key, value) => {
-      obj[key] = value;
+function handleFiles(files, collection) {
+  // Loop through the FileList
+  for (let i = 0, f; (f = files[i]); i++) {
+    // Only process image files.
+    if (!f.type.match('image.*')) {
+      continue;
+    }
+
+    const img = document.createElement('img'),
+      url = URL.createObjectURL(f);
+
+    img.onload = () => URL.revokeObjectURL(url);
+    img.src = url;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 50;
+    canvas.height = 50;
+
+    const context = canvas.getContext('2d');
+    context.drawImage(img, canvas.width, canvas.height);
+
+    canvas.toBlob(async blob => {
+      try {
+        const photoID = await idb.addPhoto(f, blob);
+        collection.ids_photos.push(photoID);
+        collection.count++;
+        await idb.updateColletion(collection);
+      } catch (err) {
+        console.error(err);
+      }
     });
-
-    addCollection(obj.username, 'My First Album');
   }
-});
+}
 
-openDb();
+function addEventListeners() {
+  window.addEventListener('load', async () => {
+    if (localStorage.token) {
+      const username = getParam('username');
+      try {
+        await idb.isUserLoggedIn(username);
+      } catch (err) {
+        localStorage.removeItem('token');
+        window.location.href = '/';
+        console.error(err);
+      }
+    } else {
+      window.location.href = '/';
+    }
+  });
+
+  $('#add-collection').on('click', async event => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (localStorage.token) {
+      const username = getParam('username');
+      try {
+        const isTrue = await idb.isUserLoggedIn(username);
+        if (isTrue) {
+          const title = $('#album-title').get(0).value;
+          if (title.length > 0) {
+            try {
+              const obj = await idb.addCollection(username, title);
+              const files = $('#files').get(0).files;
+              const $span = $('#date-created');
+              const options = { day: 'numeric', month: 'short' };
+              $span.text(obj.dateCreated.toLocaleDateString('ro-RO', options));
+              handleFiles(files, obj);
+            } catch (err) {
+              console.error(err);
+            }
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  });
+
+  $('#get-collections').on('click', async () => {
+    if (localStorage.token) {
+      const username = getParam('username');
+      const isTrue = await idb.isUserLoggedIn(username);
+      if (isTrue) {
+        const collections = await idb.getCollectionIDs(username);
+        collections.forEach(async id => {
+          const title = await idb.getCollectionTitle(id);
+          const p = document.createElement('p');
+          p.innerText = title;
+          document.body.appendChild(p);
+        });
+      }
+    }
+  });
+}
+
+addEventListeners();
+idb.openDb();

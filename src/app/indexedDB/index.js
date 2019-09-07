@@ -49,7 +49,7 @@ function openDb() {
       { keyPath: 'id', autoIncrement: true }
     );
 
-    photoStore.createIndex('collectionId', 'collectionId', { unique: false });
+    photoStore.createIndex('collectionID', 'collectionID', { unique: false });
     photoStore.createIndex('name', 'name', { unique: true });
     photoStore.createIndex('dateCreated', 'dateCreated', { unique: false });
   };
@@ -92,8 +92,6 @@ const addUser = (username, password) => {
 
 const addCollection = (username, title) => {
   return new Promise((resolve, reject) => {
-    console.log('addCollection: ', arguments);
-
     const userStore = getObjectStore(DB_STORE_NAME[0], 'readwrite');
     const index = userStore.index('username');
     const req = index.get(username);
@@ -101,48 +99,86 @@ const addCollection = (username, title) => {
       const data = event.target.result;
       if (typeof data === 'undefined') return reject('No user logedin');
 
-      if (data.token === localStorage.token) {
-        const obj = {
-          id: uniqid('col-'),
-          userId: data.id,
-          ids_photos: [],
-          title: title,
-          dateCreated: new Date(),
-          count: 0
-        };
-
-        data.ids_collections.push(obj.id);
-        userStore.put(data);
-        const store = getObjectStore(DB_STORE_NAME[1], 'readwrite');
-        const req = store.add(obj);
-        req.onsuccess = () => {
-          resolve('Insertion in DB successful');
-        };
-        req.onerror = event => {
-          reject(`addCollection: ${event.error.message}`);
-        };
-      }
+      const obj = {
+        id: uniqid('col-'),
+        userId: data.id,
+        ids_photos: [],
+        title: title,
+        dateCreated: new Date(),
+        count: 0
+      };
+      data.ids_collections.push(obj.id);
+      userStore.put(data);
+      const store = getObjectStore(DB_STORE_NAME[1], 'readwrite');
+      const req = store.add(obj);
+      req.onsuccess = () => {
+        resolve(obj);
+      };
+      req.onerror = event => {
+        userStore.transaction.abort();
+        reject(`addCollection: ${event.target.error}`);
+      };
     };
   });
 };
 
-const getCollections = username => {
+const updateColletion = obj => {
+  return new Promise((resolve, reject) => {
+    const store = getObjectStore(DB_STORE_NAME[1], 'readwrite');
+    const req = store.put(obj);
+    req.onsuccess = () => resolve('Store updated successfuly');
+    req.onerror = event => reject(`updateCollection: ${event.target.error}`);
+  });
+};
+
+const addPhoto = (f, blob, collectionID) => {
+  return new Promise((resolve, reject) => {
+    const store = getObjectStore(DB_STORE_NAME[2], 'readwrite');
+    const obj = {
+      id: uniqid('img-'),
+      collectionID,
+      thumb: blob,
+      photo: f,
+      name: f.name,
+      dateCreated: new Date()
+    };
+    const req = store.add(obj);
+    req.onsuccess = () => {
+      resolve(obj.id);
+    };
+    req.onerror = event => {
+      reject(`addPhoto: ${event.target.error}`);
+    };
+  });
+};
+
+const getCollectionIDs = username => {
   return new Promise((resolve, reject) => {
     const userStore = getObjectStore(DB_STORE_NAME[0], 'readwrite');
     const index = userStore.index('username');
     const req = index.get(username);
     req.onsuccess = event => {
-      data = event.target.result;
+      const data = event.target.result;
       if (typeof data === 'undefined') return reject('No user logedin');
 
-      collectionIDs = data.ids_collections;
-      for (id in collectionIDs) {
-        const store = getObjectStore(DB_STORE_NAME[1], 'readwrite');
-        const req = store.get(id);
-        req.onsuccess = event => {
-          data = event.target.result;
-        };
-      }
+      resolve(data.ids_collections);
+    };
+    req.onerror = event => {
+      console.log(`getCollection: ${event.target.error}`);
+    };
+  });
+};
+
+const getCollectionTitle = id => {
+  return new Promise((resolve, reject) => {
+    const store = getObjectStore(DB_STORE_NAME[1], 'readwrite');
+    const req = store.get(id);
+    req.onsuccess = event => {
+      const data = event.target.result;
+      resolve(data.title);
+    };
+    req.onerror = event => {
+      console.log(`getCollectionTitle: ${event.target.error}`);
     };
   });
 };
@@ -170,25 +206,35 @@ const getUser = (username, password) => {
   });
 };
 
-const getUserByToken = token => {
+const isUserLoggedIn = (username = null) => {
   return new Promise((resolve, reject) => {
     const store = getObjectStore(DB_STORE_NAME[0], 'readonly');
-    const index = store.index('token');
+    const index = store.index(username === null ? 'token' : 'username');
 
-    let req = index.get(token);
+    let req = index.get(username === null ? localStorage.token : username);
     req.onsuccess = event => {
       const data = event.target.result;
-      if (typeof data === 'undefined') return reject('Token not found');
+      if (typeof data === 'undefined') return reject('Username not found');
 
-      resolve('User is still logedin');
+      if (localStorage.token === data.token) {
+        resolve(true);
+      } else {
+        reject('User not logged in');
+      }
     };
     req.onerror = event => {
-      reject('Token not found: ' + event.target.errorCode);
+      reject(`Username not found: ${event.target.errorCode}`);
     };
   });
 };
 
-const logoutUser = token => {
+/**
+ *
+ *
+ * @param {*} token
+ * @returns
+ */
+function logoutUser(token) {
   return new Promise((resolve, reject) => {
     const store = getObjectStore(DB_STORE_NAME[0], 'readwrite');
 
@@ -211,7 +257,7 @@ const logoutUser = token => {
       }
     };
   });
-};
+}
 
 function addEventListeners() {
   console.log('addEventListeners');
@@ -229,4 +275,15 @@ function addEventListeners() {
   });
 }
 
-export { openDb, addUser, getUser, getUserByToken, logoutUser, addCollection };
+export default {
+  openDb,
+  addUser,
+  getUser,
+  isUserLoggedIn,
+  logoutUser,
+  addCollection,
+  addPhoto,
+  getCollectionIDs,
+  getCollectionTitle,
+  updateColletion
+};

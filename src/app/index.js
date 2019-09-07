@@ -2,7 +2,7 @@
 import 'bootstrap';
 import '../styles/main.scss';
 
-import { openDb, getUserByToken } from './indexedDB';
+import idb from './indexedDB';
 import addNewUser from './new-user';
 import loginUser from './login';
 
@@ -28,10 +28,10 @@ window.addEventListener('load', () => {
   );
 
   if (localStorage.token) {
-    const res = getUserByToken(localStorage.token);
-    res
+    idb
+      .isUserLoggedIn()
       .then(res => {
-        window.location.href = '/dashboard';
+        window.location.href = `/dashboard?username=${res.username}`;
       })
       .catch(err => {
         console.log(err);
@@ -78,7 +78,7 @@ cancelBtns.forEach(btn => {
   });
 });
 
-openDb();
+idb.openDb();
 
 addNewUser(newUserForm);
 loginUser(loginForm);

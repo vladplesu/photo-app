@@ -1,5 +1,5 @@
 // New user script
-import { addUser } from './indexedDB';
+import idb from './indexedDB';
 
 const addNewUser = formContainer => {
   const loginForm = document.querySelector('#log-in-form');
@@ -13,7 +13,7 @@ const addNewUser = formContainer => {
       form.classList.add('was-validated');
       const username = formContainer.querySelector('#new-user-input');
       const password = formContainer.querySelector('#new-password-input');
-      const res = addUser(username.value, password.value);
+      const res = idb.addUser(username.value, password.value);
       res
         .then(res => {
           console.log(res);

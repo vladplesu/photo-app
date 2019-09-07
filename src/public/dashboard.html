@@ -10,8 +10,43 @@
     <h1>
       User Dashboard
     </h1>
-    <button class="btn btn-outline-primary">New Collection</button>
-    <button class="btn btn-outline-secondary">Log out</button>
+    <div class="row">
+      <div class="col-4  mx-2">
+        <form>
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control border-left-0 border-right-0 border-top-0 rounded-0 border-primary px-0"
+              id="album-title"
+              placeholder="Add Title"
+            />
+            <small id="date-created" class="form-text text-muted"></small>
+          </div>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroupFileAddon01"
+                >Upload</span
+              >
+            </div>
+            <div class="custom-file">
+              <input
+                type="file"
+                class="custom-file-input"
+                id="files"
+                aria-describedby="upload"
+                multiple
+              />
+              <label class="custom-file-label" for="files">Choose file</label>
+            </div>
+          </div>
+          <button id="add-collection" class="btn btn-outline-primary">
+            Create Album
+          </button>
+        </form>
+      </div>
+    </div>
+    <button id="get-collections" class="btn btn-outline-primary">Albums</button>
+    <button id="logout" class="btn btn-outline-secondary">Log out</button>
     <!-- TODO: User can see a top nav bar
       TODO: User can see a sign-out button
       TODO: User can see a download button active only if at least one picture/collection is selected

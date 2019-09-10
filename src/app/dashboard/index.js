@@ -77,20 +77,18 @@ function addEventListeners() {
     if (localStorage.token) {
       const username = getParam('username');
       try {
-        const isTrue = await idb.isUserLoggedIn(username);
-        if (isTrue) {
-          const title = $('#album-title').get(0).value;
-          if (title.length > 0) {
-            try {
-              const obj = await idb.addCollection(username, title);
-              const files = $('#files').get(0).files;
-              const $span = $('#date-created');
-              const options = { day: 'numeric', month: 'short' };
-              $span.text(obj.dateCreated.toLocaleDateString('ro-RO', options));
-              handleFiles(files, obj);
-            } catch (err) {
-              console.error(err);
-            }
+        await idb.isUserLoggedIn(username);
+        const title = $('#album-title').get(0).value;
+        if (title.length > 0) {
+          try {
+            const obj = await idb.addCollection(username, title);
+            const files = $('#files').get(0).files;
+            const $span = $('#date-created');
+            const options = { day: 'numeric', month: 'short' };
+            $span.text(obj.dateCreated.toLocaleDateString('ro-RO', options));
+            handleFiles(files, obj);
+          } catch (err) {
+            console.error(err);
           }
         }
       } catch (err) {
@@ -102,15 +100,21 @@ function addEventListeners() {
   $('#get-collections').on('click', async () => {
     if (localStorage.token) {
       const username = getParam('username');
-      const isTrue = await idb.isUserLoggedIn(username);
-      if (isTrue) {
+      try {
+        await idb.isUserLoggedIn(username);
         const collections = await idb.getCollectionIDs(username);
         collections.forEach(async id => {
-          const title = await idb.getCollectionTitle(id);
-          const p = document.createElement('p');
-          p.innerText = title;
-          document.body.appendChild(p);
+          try {
+            const title = await idb.getCollectionTitle(id);
+            const p = document.createElement('p');
+            p.innerText = title;
+            document.body.appendChild(p);
+          } catch (err) {
+            console.error(err);
+          }
         });
+      } catch (err) {
+        console.error(err);
       }
     }
   });

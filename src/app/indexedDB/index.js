@@ -6,6 +6,10 @@ const DB_STORE_NAME = ['users', 'collections', 'photos'];
 
 let db;
 
+/**
+ *
+ *
+ */
 function openDb() {
   console.log('openDb ...');
   const req = indexedDB.open(DB_NAME, DB_VERSION);
@@ -68,7 +72,7 @@ function getObjectStore(store_name, mode) {
  * @param {string} username
  * @param {string} password
  */
-const addUser = (username, password) => {
+function addUser(username, password) {
   return new Promise((resolve, reject) => {
     console.log('addUser:', arguments);
     const obj = {
@@ -88,9 +92,16 @@ const addUser = (username, password) => {
       reject(`addUser error: ${this.error.message}`);
     };
   });
-};
+}
 
-const addCollection = (username, title) => {
+/**
+ *
+ *
+ * @param {*} username
+ * @param {*} title
+ * @returns
+ */
+function addCollection(username, title) {
   return new Promise((resolve, reject) => {
     const userStore = getObjectStore(DB_STORE_NAME[0], 'readwrite');
     const index = userStore.index('username');
@@ -120,18 +131,32 @@ const addCollection = (username, title) => {
       };
     };
   });
-};
+}
 
-const updateColletion = obj => {
+/**
+ *
+ *
+ * @param {*} obj
+ * @returns
+ */
+function updateColletion(obj) {
   return new Promise((resolve, reject) => {
     const store = getObjectStore(DB_STORE_NAME[1], 'readwrite');
     const req = store.put(obj);
     req.onsuccess = () => resolve('Store updated successfuly');
     req.onerror = event => reject(`updateCollection: ${event.target.error}`);
   });
-};
+}
 
-const addPhoto = (f, blob, collectionID) => {
+/**
+ *
+ *
+ * @param {*} f
+ * @param {*} blob
+ * @param {*} collectionID
+ * @returns
+ */
+function addPhoto(f, blob, collectionID) {
   return new Promise((resolve, reject) => {
     const store = getObjectStore(DB_STORE_NAME[2], 'readwrite');
     const obj = {
@@ -150,9 +175,15 @@ const addPhoto = (f, blob, collectionID) => {
       reject(`addPhoto: ${event.target.error}`);
     };
   });
-};
+}
 
-const getCollectionIDs = username => {
+/**
+ *
+ *
+ * @param {*} username
+ * @returns
+ */
+function getCollectionIDs(username) {
   return new Promise((resolve, reject) => {
     const userStore = getObjectStore(DB_STORE_NAME[0], 'readwrite');
     const index = userStore.index('username');
@@ -167,9 +198,15 @@ const getCollectionIDs = username => {
       console.log(`getCollection: ${event.target.error}`);
     };
   });
-};
+}
 
-const getCollectionTitle = id => {
+/**
+ *
+ *
+ * @param {*} id
+ * @returns
+ */
+function getCollectionTitle(id) {
   return new Promise((resolve, reject) => {
     const store = getObjectStore(DB_STORE_NAME[1], 'readwrite');
     const req = store.get(id);
@@ -181,9 +218,16 @@ const getCollectionTitle = id => {
       console.log(`getCollectionTitle: ${event.target.error}`);
     };
   });
-};
+}
 
-const getUser = (username, password) => {
+/**
+ *
+ *
+ * @param {*} username
+ * @param {*} password
+ * @returns
+ */
+function getUser(username, password) {
   return new Promise((resolve, reject) => {
     const store = getObjectStore(DB_STORE_NAME[0], 'readwrite');
     const index = store.index('username');
@@ -204,9 +248,15 @@ const getUser = (username, password) => {
       reject('User not found: ' + event.target.errorCode);
     };
   });
-};
+}
 
-const isUserLoggedIn = (username = null) => {
+/**
+ *
+ *
+ * @param {*} [username=null]
+ * @returns
+ */
+function isUserLoggedIn(username = null) {
   return new Promise((resolve, reject) => {
     const store = getObjectStore(DB_STORE_NAME[0], 'readonly');
     const index = store.index(username === null ? 'token' : 'username');
@@ -217,7 +267,7 @@ const isUserLoggedIn = (username = null) => {
       if (typeof data === 'undefined') return reject('Username not found');
 
       if (localStorage.token === data.token) {
-        resolve(true);
+        resolve(data.username);
       } else {
         reject('User not logged in');
       }
@@ -226,11 +276,9 @@ const isUserLoggedIn = (username = null) => {
       reject(`Username not found: ${event.target.errorCode}`);
     };
   });
-};
+}
 
 /**
- *
- *
  * @param {*} token
  * @returns
  */
@@ -256,22 +304,6 @@ function logoutUser(token) {
         reject('Token not found');
       }
     };
-  });
-}
-
-function addEventListeners() {
-  console.log('addEventListeners');
-
-  $('#log-in').on('click', async event => {
-    // event.preventDefault();
-    const userName = $('#username').value;
-    const password = $('input[type="password"]');
-    try {
-      const res = await getUser(userName, password);
-      console.log(res);
-    } catch (err) {
-      console.error(err);
-    }
   });
 }
 

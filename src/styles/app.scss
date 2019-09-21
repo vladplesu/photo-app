@@ -41,3 +41,25 @@
     margin-right: 150px;
   }
 }
+
+textarea {
+  border: none;
+  border-bottom: 1px solid transparent;
+  display: block;
+  box-sizing: border-box;
+  outline: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  resize: none;
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1) all;
+  overflow: hidden;
+  font-size: 3rem;
+  font-weight: 400;
+  line-height: 4rem;
+  height: 65px;
+}
+
+textarea:hover {
+  border-bottom: 1px solid #dadce0;
+}

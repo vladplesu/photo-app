@@ -38,8 +38,8 @@ function addEventListeners() {
 
     if (localStorage.token) {
       try {
-        const username = await idb.isUserLoggedIn();
-        window.location.href = `/dashboard?username=${username}`;
+        const userData = await idb.isUserLoggedIn();
+        window.location.href = `/dashboard?username=${userData.username}`;
       } catch (err) {
         console.error(err);
         localStorage.removeItem('token');
